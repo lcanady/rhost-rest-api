@@ -5,7 +5,7 @@ const { exec } = require("child_process");
 // Gather our variables.
 // You'll probably want to change these to match your setup.
 const address = "http://localhost:3000";
-const apiKey = "1234";
+const apiKey = "xxxxxxxxx";
 
 // This ugly line gets rid of everything after the first '?', then breaks the
 // rest of it up into segments based on '/'.
