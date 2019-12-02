@@ -4,14 +4,14 @@ const { exec } = require("child_process");
 
 // Gather our variables.
 // You'll probably want to change these to match your setup.
-const address = "http://localhost:3000";
-const apiKey = "xxxxxxxxx";
+const address = process.env.API_ADDRESS || "http://localhost:3000";
+const apiKey = process.env.API_KEY || "1234";
 
 // This ugly line gets rid of everything after the first '?', then breaks the
 // rest of it up into segments based on '/'.
 const path = process.argv[2].split("?")[0].split("/") || "";
 let params = process.argv[2].split("?")[1];
-params = params.split("&");
+params = params ? params.split("&") : [];
 
 const paramMap = new Map();
 // We don't need anything before the first '?' for params.
