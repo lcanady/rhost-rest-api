@@ -24,7 +24,7 @@ to the web client.
   // Set other registers needed by Execscript
   [setq(3, execscript(stats.js, %#/misc.avatar), AVATAR)]
   [setq(4, say, TYPE)]
-  [setq(5, [edit("%0","",")], MESSAGE)];
+  [setq(5, [edit("[eval(%0)]","",")], MESSAGE)];
   
   // Message listeners that aren't using JSON.
   @pemit/list %q2 = [cname(%#)] says %q5;

@@ -46,6 +46,14 @@ export default (req: Request, res: Response, next: NextFunction) => {
         isAdmin: 1
       };
       next();
+    } else if (req.method === "GET" && req.path === "/") {
+      // @ts-ignore
+      res.account = {
+        name: "guest",
+        isImmortal: false,
+        isAdmin: false
+      };
+      next();
     } else {
       res.status(401).json({
         error: true,

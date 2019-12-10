@@ -1,4 +1,5 @@
 import authRoute from "./src/routes/authRoute";
+import helpRoute from "./src/routes/helpRoute";
 import auth from "./src/middleware/auth";
 import statsRoute from "./src/routes/statsRoute";
 import db from "./src/db/database";
@@ -16,6 +17,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use("/api/v1/auth/", authRoute);
 app.use("/api/v1/stats/", auth, statsRoute);
+app.use("/api/v1/help/", auth, helpRoute);
 
 // Start the server
 (async () => {

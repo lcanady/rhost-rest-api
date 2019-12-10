@@ -1,12 +1,16 @@
 import { Database } from "arangojs";
-import { ArangoCollection } from "arangojs/lib/cjs/collection";
+import { DocumentCollection } from "arangojs/lib/cjs/collection";
 
 export class DB {
   private db: Database;
-  stats: any;
+  stats: DocumentCollection;
+  news: DocumentCollection;
+  help: DocumentCollection;
   constructor() {
     this.db = new Database(process.env.DB_ADDRESS);
     this.stats = this.collection("stats");
+    this.help = this.collection("help");
+    this.news = this.collection("news");
   }
 
   /**
@@ -51,15 +55,24 @@ export class DB {
       console.log(`Arango database '${dbName}' Established.`);
     }
 
-    // Create the stats collection
-    await this.stats.create().catch(async () => {
+    await this.createCollection(this.stats);
+    await this.createCollection(this.help);
+    await this.createCollection(this.news);
+    return this;
+  }
+
+  async createCollection(collection: DocumentCollection) {
+    await this[collection.name].create().catch(async () => {
       // Collection already exists. Try to ping it to see if it's working.
-      await this.stats.get().catch((error: Error) => console.error(error));
+      await this[collection.name]
+        .get()
+        .catch((error: Error) => console.error(error));
     });
     // New collection created.  Ping it to make sure it's working.
-    await this.stats.get().catch((error: Error) => console.error(error));
-    console.log("Collection 'Stats' loaded.");
-    return this;
+    await this[collection.name]
+      .get()
+      .catch((error: Error) => console.error(error));
+    console.log(`Collection '${collection.name}' loaded.`);
   }
 }
 

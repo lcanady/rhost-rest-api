@@ -1,7 +1,9 @@
 import * as net from "net";
 const shortId = require("shortid");
 const strip = require("strip-ansi");
+const anser = require("anser");
 import { Base64 } from "js-base64";
+
 export const connect = ({ host, port, id, wSocket }) => {
   const socket = net.connect(port, host);
   // @ts-ignore
@@ -14,9 +16,17 @@ export const connect = ({ host, port, id, wSocket }) => {
 
     try {
       const data = JSON.parse(strip(output.toString()));
+      if (data.enabled) {
+        // @ts-ignore
+        socket.live = true;
+      }
+
       // @ts-ignore
       data.id = socket.id;
-      wSocket.send(JSON.stringify(data));
+      // @ts-ignore
+      if (socket.live) {
+        wSocket.send(JSON.stringify(data));
+      }
     } catch (error) {
       const msg = {
         type: "message",
@@ -24,7 +34,10 @@ export const connect = ({ host, port, id, wSocket }) => {
         id: socket.id,
         payload: Base64.encode(output.toString())
       };
-      wSocket.send(JSON.stringify(msg));
+      // @ts-ignore
+      if (socket.live) {
+        wSocket.send(JSON.stringify(msg));
+      }
     }
   });
 
@@ -33,7 +46,7 @@ export const connect = ({ host, port, id, wSocket }) => {
       type: "message",
       // @ts-ignore
       id: socket.id,
-      payload: "*** TCP Connection closed ***"
+      payload: Base64.encode("*** TCP Connection closed ***")
     };
     wSocket.send(JSON.stringify(msg));
     wSocket.close();
